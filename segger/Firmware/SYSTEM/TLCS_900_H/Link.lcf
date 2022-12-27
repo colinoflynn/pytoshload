@@ -1,0 +1,20 @@
+-ga
+-la
+System.rel
+Main.rel
+Flash16.rel
+CRC.rel
+-o
+RAM_Image.abs
+ 
+/* Linkage Command File */
+memory {
+  iram : org = 0x0000A0 len = 0x001000
+/*  irom : org = 0xF80000 len = 0x080000       */
+}
+
+sections {       
+  codeInRAM org = 0x000300                           : {*(f_code )}
+  const     org = org(codeInRAM) + sizeof(codeInRAM) : {*(f_const)}
+  area      org = org(const)     + sizeof(const)     : {*(f_area )}
+}                                                                       

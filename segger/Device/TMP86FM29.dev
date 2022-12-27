@@ -1,0 +1,42 @@
+//
+// Device file for TMP86FM29
+//
+Version           = 1
+Device            = "TMP86FM29"
+Manufacturer      = "Toshiba"
+Bank              = 8000, 8000
+Ram               =   40,  600
+PWArea            = 8000, 7FA0
+IDLenMin          = 8
+IDLenMax          = 255
+IVector           =  1, "Reset"                                          , 16, FFFE
+IVector           =  2, "INTSWI   (Software interrupt)"                  , 16, FFFC
+IVector           =  3, "INTUNDEF (Undefined instruction)"               , 16, FFFA
+IVector           =  4, "INTATRAP (Address trap interrupt)"              , 16, FFF8
+IVector           =  5, "INTWDT   (Watchdog timer interrupt)"            , 16, FFF6
+IVector           =  6, "INT0     (External interrupt 0)"                , 16, FFF4
+IVector           =  7, "INT1     (External interrupt 1)"                , 16, FFF2
+IVector           =  8, "INTTBT   (Time base timer interrupt)"           , 16, FFF0
+IVector           =  9, "INT2     (External interrupt 2)"                , 16, FFEE
+IVector           = 10, "INTTC1   (TC1 interrupt)"                       , 16, FFEC
+IVector           = 11, "INTRXD   (UART received interrupt)"             , 16, FFEC
+IVector           = 12, "INTSIO   (Serial interface interrupt)"          , 16, FFEA
+IVector           = 13, "INTTXD   (UART transmitted interrupt)"          , 16, FFEA
+IVector           = 14, "INTTC4   (TC4 interrupt)"                       , 16, FFE8
+IVector           = 15, "INTTC6   (TC6 interrupt)"                       , 16, FFE6
+IVector           = 16, "INTADC   (AD converter interrupt)"              , 16, FFE4
+IVector           = 17, "INT3     (External interrupt 3)"                , 16, FFE2
+IVector           = 18, "INTTC3   (TC3 interrupt)"                       , 16, FFE2
+IVector           = 19, "INT5     (External interrupt 5)"                , 16, FFE0
+IVector           = 20, "INTTC5   (TC5 interrupt)"                       , 16, FFE0
+UARTRamcode       = "C_FEE64_RAM40_ROM8000_TLCS870_86XX29.hex", "TYPE_A"
+TimeoutGetSUM     = 8000
+Relocate          = 8000, 8000, 8000
+RAMCodeAdrLen     = 2
+FLASHPageLen      = 64
+FLASHIsEE         = 1
+SprtCRC           = 0
+SprtErase         = 0
+SprtBlankCheck    = 0
+TimerInit         = 1
+ProductInfo       = C0, 14, 0, "C03A0A0200000000018000FFFF7F"

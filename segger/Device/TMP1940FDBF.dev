@@ -1,0 +1,39 @@
+//
+// Device file for TMP1940FDBF
+//
+Version           = 1
+Device            = "TMP1940FDBF"
+Manufacturer      = "Toshiba"
+Bank              = BFC00000, 8000
+Bank              = BFC08000, 8000
+Bank              = BFC10000, 8000
+Bank              = BFC18000, 8000
+Bank              = BFC20000, 8000
+Bank              = BFC28000, 8000
+Bank              = BFC30000, 8000
+Bank              = BFC38000, 8000
+Bank              = BFC40000, 8000
+Bank              = BFC48000, 8000
+Bank              = BFC50000, 8000
+Bank              = BFC58000, 8000
+Bank              = BFC60000, 8000
+Bank              = BFC68000, 8000
+Bank              = BFC70000, 8000
+Bank              = BFC78000, 4000
+Bank              = BFC7c000, 2000
+Bank              = BFC7e000, 1000
+Bank              = BFC7f000, 1000
+Ram               = FFFF8000, 4000
+IDLenMin          = 12
+IDLenMax          = 12
+aIDAdr            = 3F4, 3F5, 3F6, 3F7, 3F8, 3F9, 3FA, 3FB, 3FC, 3FD, 3FE, 3FF
+UARTRamcode       = "B_F32_RAMFFFF8000_ROM0_TX19.mot", "TYPE_B"
+TimeoutEraseAll   = 60000
+TimeoutEraseBlock = 5000
+TimeoutGetSUM     = 8000
+Relocate          = 0, BFC00000, 80000
+SprtProtectBlock  = 1
+SprtCRC           = 1
+SprtErase         = 1
+SprtBlankCheck    = 1
+ProductInfo       = 30, 90, 5, "54583139343046444146"

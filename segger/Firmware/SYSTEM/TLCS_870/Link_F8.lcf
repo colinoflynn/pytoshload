@@ -1,0 +1,20 @@
+-ga
+-la
+System.rel
+Main.rel
+Flash8.rel
+CRC.rel
+c86.lib
+-o
+RAM_Image.abs
+ 
+/* Linkage Command File */
+memory {
+  irom : org = 0x000080 len = 0x0007C0
+}
+
+sections {
+  codeInRAM org = 0x000080                           : {*(n_code )}
+  const     org = org(codeInRAM) + sizeof(codeInRAM) : {*(n_const)}
+  area      org = org(const)     + sizeof(const)     : {*(n_area )}
+}                                                                       

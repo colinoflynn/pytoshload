@@ -1,0 +1,23 @@
+//
+// Device file for TX19A50
+//
+Version           = 1
+Device            = "TX19A50"
+Manufacturer      = "Toshiba"
+Bank              = BFC00000, 20000
+Bank              = BFC20000, 20000
+Bank              = BFC40000, 20000
+Bank              = BFC60000, 20000
+Ram               = FFFC4000, 4000
+IDLenMin          = 12
+IDLenMax          = 12
+aIDAdr            = 474, 475, 476, 477, 478, 479, 47A, 47B, 47D, 47C, 47E, 47F
+UARTRamcode       = "B_F32_RAMFFFF4000_ROM0_TX19A50.mot", "TYPE_B"
+TimeoutEraseAll   = 60000
+TimeoutEraseBlock = 5000
+TimeoutGetSUM     = 8000
+Relocate          = 0, BFC00000, 80000
+SprtProtectBlock  = 1
+SprtCRC           = 1
+SprtErase         = 1
+SprtBlankCheck    = 1

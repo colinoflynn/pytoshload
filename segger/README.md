@@ -1,0 +1,57 @@
+#ToshLoad Segger Ram Files
+
+The following files in this directory are copied from ToshLoad (installer is available in the [TLCS-900 Resources Repo](https://github.com/colinoflynn/Toshiba-TLCS-900-L-Resources)). These files are NOT under an open-source license, but only available under the following license from Segger:
+
+```
+ToshLoad License Agreement
+
+These Terms apply to any of the ToshLoad software developed by SEGGER Microcontroller Systeme GmbH. 
+
+By downloading and/or using toshload software,the individual or entity licensing the product ("licensee") is consenting to be bound by and is becoming a party to this agreement. If licensee does not agree to all of the terms of this agreement, the licensee must not install or use any of the software developed by SEGGER Microcontroller Systeme GmbH.
+
+*** LICENSE AGREEMENT ***
+In this Agreement "Licensor" shall mean SEGGER Microcontroller Systeme GmbH (called SEGGER) except under the following circumstances:
+If Licensee acquired the Product as a bundled component of a third party product or service, then such third party shall be Licensor.
+
+2. LICENSE GRANT.
+Licensor grants Licensee a non-exclusive and non-transferable License to
+-Market, distribute, reproduce, have distributed the LICENSED SOFTWARE, on any commonly accepted medium, directly through TOSHIBA or indirectly through an AFFILIATE or AUTHORIZED REPRESENTATIVE of TOSHIBA,
+-to sub-license to customers the right to use the software. This License does not entitle Licensee to receive from SEGGER hard-copy documentation, technical support, telephone assistance, or enhancements or updates to the Product unless a specific Agreement clearly states otherwise.
+
+3. RESTRICTIONS.
+Except as otherwise expressly permitted in third party Agreements, or in another Licensor Agreement to which Licensee is a party such as a distribution agreement, Licensee may not:
+(i) decompile, disassemble, reverse engineer, or otherwise attempt to derive the source code for the Product (except to the extent applicable laws specifically prohibit such restriction or source code is already available),
+(ii) redistribute, encumber, sell, rent, lease, sublicense, or otherwise transfer rights to the Product,
+(iii) remove or alter any trademark, logo, copyright or other proprietary notices, legends, symbols or labels in the Product, or 
+(iv) publish any results of benchmark tests run on the Product to a third party without Licensor's prior written consent.
+
+4. FEES.
+There is no License fee for the Software as long as all action has been taken with regard to the Flash programm utility.
+
+5. TERMINATION.
+Without prejudice to any other rights, Licensor may terminate this Agreement if Licensee breaches any of its terms and conditions. Upon termination, Licensee shall destroy all copies of the Product.
+
+6. PROPRIETARY RIGHTS.
+Title, ownership rights, and intellectual property rights in the Product shall remain by SEGGER and/or its suppliers. Licensee acknowledges such ownership and intellectual property rights and will not take any action to jeopardize, limit or interfere in any manner with SEGGER or its suppliers' ownership of or rights with respect to the Product. The Product is protected by copyright and other intellectual property laws and by international treaties. Title and related rights in the content accessed through the Product is the property of the applicable content owner and is protected by applicable law. The License granted under this Agreement gives Licensee no rights to such content. 
+
+7. DISCLAIMER OF WARRANTY.
+The product is provided free of charge, and, therefore, on an "as is" basis, without warranty of any kind, including without limitation the warranties that it is free of defects, merchantable, fit for a particular purpose or non-infringing. The entire risk as to the quality and performance of the product is borne by licensee. Should the product prove defective in any respect, licensee and not licensor or its suppliers or resellers assumes the entire cost of any service and repair. In addition, the security mechanisms implemented by the product have inherent limitations, and licensee must determine that the product sufficiently meets its requirements. This disclaimer of warranty constitutes an essential part of this agreement. No use of the product is authorized hereunder except under this disclaimer.
+
+8. LIMITATION OF LIABILITY.
+To the maximum extent permitted by applicable law, in no event will licensor or its suppliers or resellers be liable for any indirect, special, incidental or consequential damages arising out of the use of or inability to use the product, including, without limitation, damages for loss of goodwill, work stoppage, computer failure or malfunction, or any and all other commercial damages or losses, even if advised of the possibility thereof, and regardless of the legal or equitable theory (contract, tort or otherwise) upon which the claim is based. In any case, licensor's entire liability under any provision of this agreement shall not exceed in the aggregate the sum of the fees licensee paid for this license (if any) and fees for support of the product received by SEGGER under a separate support agreement (if any), with the exception of death or personal injury caused by the negligence of licensor to the extent applicable law prohibits the limitation of damages in such cases. Some jurisdictions do not allow the exclusion or limitation of incidental or consequential damages, so this exclusion and limitation may not be applicable. SEGGER is not responsible for any liability arising out of content provided by licensee or a third party that is accessed through the product and/or any material linked through such content.
+
+9. HIGH RISK ACTIVITIES.
+The Product is not fault-tolerant and is not designed, manufactured or intended for use or resale as on-line control equipment in hazardous environments requiring fail-safe performance, such as in the operation of nuclear facilities, aircraft navigation or communication systems, air traffic control, direct life support machines, or weapons systems, in which the failure of the Product could lead directly to death, personal injury, or severe physical or environmental damage ("High Risk Activities"). Accordingly, Licensor and its suppliers specifically disclaim any express or implied warranty of fitness for High Risk Activities. Licensee agrees that Licensor and its suppliers will not be liable for any claims or damages arising from the use of the Product in such applications.
+
+10. MISCELLANEOUS.
+(a) This Agreement constitutes the entire Agreement between the parties concerning the subject matter hereof. 
+(b) This Agreement may be amended only by a writing signed by both parties.
+(c) If any provision in this Agreement should be held illegal or unenforceable by a court having jurisdiction, such provision shall be modified to the extent necessary to render it enforceable without losing its intent, or severed from this Agreement if no such modification is possible, and other provisions of this Agreement shall remain in full force and effect.
+(d) This Agreement shall be governed by the laws of the Federal Republic of Germany.
+(e) This Agreement shall be binding upon and shall inure to the benefit of the parties, their successors and permitted assigns.
+(f) Neither party shall be in default or be liable for any delay, failure in performance (excepting the obligation to pay) or interruption of service resulting directly or indirectly from any cause beyond its reasonable control.
+(g) The relationship between Licensor and Licensee is that of independent contractors and neither Licensee nor its agents shall have any authority to bind Licensor in any way.
+(h) If any SEGGER Microcontroller Systeme GmbH professional services are being provided, then such professional services are provided pursuant to the terms of a separate Professional Services Agreement between the parties. The parties acknowledge that such services are acquired independently of the Product licensed hereunder, and that provision of such services is not essential to the functionality of such Product.
+
+© 2002 SEGGER Microcontroller Systeme GmbH
+```

@@ -1,0 +1,47 @@
+//
+// Device file for TMP86FP24
+//
+Version           = 1
+Device            = "TMP86FP24"
+Manufacturer      = "Toshiba"
+Bank              = 4000, C000
+Ram               =   40,  800
+PWArea            = 4000, BFA0
+IDLenMin          = 8
+IDLenMax          = 255
+IVector           =  1, "Reset"                                          , 16, FFFE
+IVector           =  2, "INTSWI   (Software interrupt)"                  , 16, FFFC
+IVector           =  3, "INTUNDEF (Undefined instruction)"               , 16, FFFC
+IVector           =  4, "INTATRAP (Address trap interrupt)"              , 16, FFFA
+IVector           =  5, "INTWDT   (Watchdog timer interrupt)"            , 16, FFF8
+IVector           =  6, "INT0     (External interrupt 0)"                , 16, FFF6
+IVector           =  7, "INTTC1   (TC1 interrupt)"                       , 16, FFF4
+IVector           =  8, "INT1     (External interrupt 1)"                , 16, FFF2
+IVector           =  9, "INTTBT   (Time base timer interrupt interrupt)" , 16, FFF0
+IVector           = 10, "INT2     (External interrupt 2)"                , 16, FFEE
+IVector           = 11, "INTTC3   (TC3 interrupt)"                       , 16, FFEC
+IVector           = 12, "INTSIO1  (Serial interface 1 interrupt)"        , 16, FFEA
+IVector           = 13, "INTSIO2  (Serial interface 2 interrupt)"        , 16, FFE8
+IVector           = 14, "INTTC5   (TC5 interrupt)"                       , 16, FFE6
+IVector           = 15, "INT3     (External interrupt 3)"                , 16, FFE4
+IVector           = 16, "INTADC   (AD converter interrupt)"              , 16, FFE2
+IVector           = 17, "         (reserved)"                            , 16, FFE0
+IVector           = 18, "         (reserved)"                            , 16, FFBE
+IVector           = 19, "         (reserved)"                            , 16, FFBC
+IVector           = 20, "INTRXD   (UART received interrupt)"             , 16, FFBA
+IVector           = 21, "INTTXD   (UART transmitted interrupt)"          , 16, FFB8
+IVector           = 22, "INTTC2   (TC2 interrupt)"                       , 16, FFB6
+IVector           = 23, "INT5     (External interrupt 5)"                , 16, FFB4
+IVector           = 24, "         (reserved)"                            , 16, FFB2
+IVector           = 25, "         (reserved)"                            , 16, FFB0
+UARTRamcode       = "C_FEE128_RAM40_ROM4000_TLCS870_86XX24.hex", "TYPE_A"
+TimeoutGetSUM     = 8000
+Relocate          = 4000, 4000, C000
+RAMCodeAdrLen     = 2
+FLASHPageLen      = 128
+FLASHIsEE         = 1
+SprtCRC           = 0
+SprtErase         = 0
+SprtBlankCheck    = 0
+TimerInit         = 1
+ProductInfo       = C0, 14, 0, "C03A0A0200000000014000FFFFBF"
