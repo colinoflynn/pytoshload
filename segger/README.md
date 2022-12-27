@@ -1,9 +1,10 @@
-#ToshLoad Segger Ram Files
+# ToshLoad Segger Ram Files
 
 The following files in this directory are copied from ToshLoad (installer is available in the [TLCS-900 Resources Repo](https://github.com/colinoflynn/Toshiba-TLCS-900-L-Resources)). These files are NOT under an open-source license, but only available under the following license from Segger:
 
-```
-ToshLoad License Agreement
+---
+
+## ToshLoad License Agreement
 
 These Terms apply to any of the ToshLoad software developed by SEGGER Microcontroller Systeme GmbH. 
 
@@ -54,4 +55,3 @@ The Product is not fault-tolerant and is not designed, manufactured or intended 
 (h) If any SEGGER Microcontroller Systeme GmbH professional services are being provided, then such professional services are provided pursuant to the terms of a separate Professional Services Agreement between the parties. The parties acknowledge that such services are acquired independently of the Product licensed hereunder, and that provision of such services is not essential to the functionality of such Product.
 
 © 2002 SEGGER Microcontroller Systeme GmbH
-```
