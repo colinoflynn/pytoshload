@@ -3,9 +3,10 @@ import serial
 
 class LowLevelBootloader(object):
 
-    def __init__(self, comobject, reset_function):
+    def __init__(self, comobject, reset_function, password=[0xFF]*12):
         self.ser = comobject
         self.reset = reset_function
+        self.password = password
         self.reset()
         self.connect()
 
@@ -99,10 +100,10 @@ class LowLevelBootloader(object):
         if responsehex[1] != 0x5D:
             raise IOError("Error in erase")
 
-    def cmd_protect_set(self, password=[0xFF]*12):
+    def cmd_protect_set(self):
         self.cmd_checkack(0x60)
-        cs = self.calc_checksum(password)
-        self.write(bytes(bytearray(password)))
+        cs = self.calc_checksum(self.password)
+        self.write(bytes(bytearray(self.password)))
         response, responsehex = self.cmd_checkack(cs, 2, 0x60)
 
         if responsehex[0] != 0x6F:
@@ -111,6 +112,22 @@ class LowLevelBootloader(object):
         if responsehex[1] != 0x31:
             raise IOError("ACK Response: Error (%x)"%responsehex[1])
 
+    def cmd_ram_transfer(self, data, starting_address):        
+        self.cmd_checkack(0x10)
+        cs = self.calc_checksum(self.password)
+        self.write(bytes(bytearray(self.password)))
+        self.cmd_checkack(cs, 0, 0x10)
+
+        cmddata = [(starting_address >> 24) & 0xff, (starting_address >> 16) & 0xff, (starting_address >> 8) & 0xff, starting_address & 0xff,
+        (len(data) >> 8) & 0xff, len(data) & 0xff]
+
+        cs = self.calc_checksum(cmddata)
+        self.write(bytes(bytearray(cmddata)))        
+        self.cmd_checkack(cs, 0, 0x10)
+
+        cs = self.calc_checksum(data)
+        self.write(bytes(bytearray(data)))        
+        self.cmd_checkack(cs, 0, 0x10)
 
 class RamCodeProtocol(object):
     protSD1 = 0xEB
