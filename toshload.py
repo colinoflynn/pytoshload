@@ -3,8 +3,14 @@ import serial
 import struct
 
 class LowLevelBootloader(object):
+    """TLCS900 low-level bootloader, based on at least the TLCS900L1 datasheets. May or
+    may not work for others.
+    """
 
     def __init__(self, comobject, reset_function, password=[0xFF]*12):
+        """Initialize bootloader connection. Requires you pass at minimum a serial object
+        (comobject), along with a function that when called will reset the target & enter
+        the bootloader."""
         self.ser = comobject
         self.reset = reset_function
         self.password = password
@@ -12,6 +18,7 @@ class LowLevelBootloader(object):
         self.connect()
 
     def connect(self):
+        """Send connection byte (0x86) to check if bootloader seems to be present"""
         self.flush()
         self.write(b"\x86")
         res = self.read(1)
@@ -20,6 +27,7 @@ class LowLevelBootloader(object):
             raise IOError("Connect Fail - read: %s"%res)
 
     def calc_checksum(self, r):
+        """Calculate checksum used on bootloader coms"""
         s = 0
         for c in r:
             s += c
@@ -36,6 +44,7 @@ class LowLevelBootloader(object):
         self.ser.flush()
 
     def tx_rx(self, cmd, expectedlen=0, rxlen=-1):
+        """Transmit data to the bootloader, and receive some back. Returns both a string & list version for convience"""
 
         if rxlen == -1:
             if expectedlen == 0:
@@ -52,6 +61,9 @@ class LowLevelBootloader(object):
         return response, responsehex
 
     def cmd_checkack(self, cmd, expected_extra_payload=0, expected_response=None):
+        """Send a command to the bootloader, and check that the command was echo'd back as the normal ACK response.
+        You can override the expected ACK to account for some commands with different ACKs."""
+
         bcmd = bytes(bytearray([cmd]))
         response, responsehex = self.tx_rx(bcmd, expected_extra_payload+1)
 
@@ -64,6 +76,7 @@ class LowLevelBootloader(object):
         return response[1:], responsehex[1:]
 
     def cmd_productinfo(self):
+        """Get product info (device name, protection status, and anything else encoded in there)"""
 
         response, responsehex = self.cmd_checkack(0x30, 62)
             
@@ -92,6 +105,8 @@ class LowLevelBootloader(object):
         return response
 
     def cmd_erase(self):
+        """Perform chip erase, also clears FLASH protection"""
+
         self.cmd_checkack(0x40) #Erase command
         response, responsehex = self.cmd_checkack(0x54, 2) #Erase enable command, 2 seperate ACKs back
 
@@ -102,6 +117,8 @@ class LowLevelBootloader(object):
             raise IOError("Error in erase")
 
     def cmd_protect_set(self):
+        """Set FLASH protection. Requires correct password."""
+
         self.cmd_checkack(0x60)
         cs = self.calc_checksum(self.password)
         self.write(bytes(bytearray(self.password)))
@@ -114,6 +131,8 @@ class LowLevelBootloader(object):
             raise IOError("ACK Response: Error (%x)"%responsehex[1])
 
     def cmd_ram_transfer(self, data, starting_address):        
+        """Transfer RAM program. Requires correct password"""
+
         self.cmd_checkack(0x10)
         cs = self.calc_checksum(self.password)
         self.write(bytes(bytearray(self.password)))
@@ -131,6 +150,13 @@ class LowLevelBootloader(object):
         self.cmd_checkack(cs, 0, 0x10)
 
 class RamCodeProtocol(object):
+    """Segger RAM Code bootloader communication class for TLCS900.
+
+    This implements the protocol Segger uses for the TLCS900 devices. You
+    must have used the low-level bootloader to previously perform the serial
+    setup along with loading the RAMCode.
+    """
+
     protSD1 = 0xEB
     protSD2 = 0xED
     protED = 0xEC
@@ -145,7 +171,7 @@ class RamCodeProtocol(object):
     CMD_GET_SUM = 7
 
     CMD_NACK = 0xF1
-    CMD_ACT = 0xF2
+    CMD_ACK = 0xF2
     CMD_ERROR = 0xF3
 
     ERROR_ERASE = 1
@@ -156,28 +182,35 @@ class RamCodeProtocol(object):
     ERROR_PROTECT = 6
 
     def __init__(self, ser):
+        """Setup the connection, requires you pass a serial object"""
         self.ser = ser
 
     def write(self, data):
+        """Serial write (pass-thru), attempts to detect if you pass just a single byte"""
         if hasattr(data, "len") is False:
             data = [data]
         self.ser.write(data)
 
     def read(self, len):
+        """Serial read (pass-thru)"""
         return self.ser.read(len)
 
     def flush(self):
+        """Serial flush (pass-thru)"""
         self.ser.flush()
 
     def u32_to_buffer(self, u32):
+        """Packs u32 to buffer"""
         buf = [(u32 & 0xff), (u32 >> 8) & 0xff, (u32 >> 16) & 0xff, (u32 >> 24) & 0xff]
         return buf
 
     def u16_to_buffer(self, u16):
+        """Packs u16 to buffer"""
         buf = [(u16 & 0xff), (u16 >> 8) & 0xff]
         return buf
        
     def sendPacket(self, payload):
+        """Send a packet to the bootloader, adding required header"""
         self.write(self.protSD1)
         self.write(self.protSD2)
 
@@ -198,11 +231,13 @@ class RamCodeProtocol(object):
         self.write(self.protED)
 
     def rxExpect(self, expected):
+        """Reads a single byte and compares it to an expected value"""
         c = self.read(1)
         if ord(c[0]) != expected:
             raise IOError("Sync Error - received %x (expected %x)"%(ord(c[0]), expected))
 
     def rxPacket(self):
+        """Internal function, reads a packet and raises IOError if checksum is incorrect"""
         self.rxExpect(self.protSD1)
         self.rxExpect(self.protSD2)
 
@@ -232,6 +267,7 @@ class RamCodeProtocol(object):
         return payload
 
     def cmd_id(self):
+        """Read ID from the bootloader, just has some flags along with buffer size info"""
         self.sendPacket([self.CMD_ID])
         payload = self.rxPacket()
 
@@ -246,7 +282,9 @@ class RamCodeProtocol(object):
         return flags, bufsize
 
     def cmd_read(self, address, len):
-        
+        """Read flash memory, watch for the address remap that happens
+        when booted in 'single boot mode', typically flash gets mapped
+        around 0x10000 instead of 0xff0000."""        
         dleft = len
         readbackdata = ""
 
@@ -272,6 +310,33 @@ class RamCodeProtocol(object):
         return readbackdata
 
 
-        
+    def cmd_program(self, address, data):
+        """Program flash memory, watch for the address remap that happens
+        when booted in 'single boot mode', typically flash gets mapped
+        around 0x10000 instead of 0xff0000."""
+
+        dleft = len(data)
+        dindex = 0
+
+        while dleft > 0:
+            if dleft > 0x100:
+                dwrite = 0x100
+            else:
+                dwrite = dleft
+            
+            packet = [self.CMD_PROGRAM]
+            packet.extend(self.u32_to_buffer(address))
+            packet.extend(self.u16_to_buffer(dwrite))
+            packet.extend(data[dindex:(dindex+dwrite)])
+            self.sendPacket(packet)
+
+            response = self.rxPacket()
+            rc = ord(response[0])
+            if rc != self.CMD_ACK:
+                raise IOError("Response to program was %x (not ACK)"%rc)
+            
+            dleft -= dwrite
+            address += dwrite
+            dindex += dwrite
 
 
