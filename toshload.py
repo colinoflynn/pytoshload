@@ -1,5 +1,6 @@
 
 import serial
+import struct
 
 class LowLevelBootloader(object):
 
@@ -157,25 +158,31 @@ class RamCodeProtocol(object):
     def __init__(self, ser):
         self.ser = ser
 
-    def write(self, byte):
-        todo
+    def write(self, data):
+        if hasattr(data, "len") is False:
+            data = [data]
+        self.ser.write(data)
 
-    def writeU16(self, data):
-        self.write(data & 0xff)
-        self.write((data >> 8) & 0xff)
+    def read(self, len):
+        return self.ser.read(len)
 
-    def writeU32(self, data):
-        self.write(data & 0xffff)
-        self.write((data >> 16) & 0xffff)
+    def flush(self):
+        self.ser.flush()
 
+    def u32_to_buffer(self, u32):
+        buf = [(u32 & 0xff), (u32 >> 8) & 0xff, (u32 >> 16) & 0xff, (u32 >> 24) & 0xff]
+        return buf
 
+    def u16_to_buffer(self, u16):
+        buf = [(u16 & 0xff), (u16 >> 8) & 0xff]
+        return buf
+       
     def sendPacket(self, payload):
-
         self.write(self.protSD1)
         self.write(self.protSD2)
 
         lenLow = len(payload) & 0xFF
-        lowHigh = len(payload) >> 8
+        lenHigh = len(payload) >> 8
 
         self.write(lenLow)
         self.write(lenHigh)
@@ -189,3 +196,82 @@ class RamCodeProtocol(object):
         self.write(checksum & 0xff)
 
         self.write(self.protED)
+
+    def rxExpect(self, expected):
+        c = self.read(1)
+        if ord(c[0]) != expected:
+            raise IOError("Sync Error - received %x (expected %x)"%(ord(c[0]), expected))
+
+    def rxPacket(self):
+        self.rxExpect(self.protSD1)
+        self.rxExpect(self.protSD2)
+
+        l = self.read(2)
+        llsb = ord(l[0])
+        lmsb = ord(l[1])
+
+        checksum = llsb + lmsb
+
+        plen = llsb + (lmsb << 8)
+
+        if plen:
+            payload = self.read(plen)
+            for i in payload:
+                checksum += ord(i)
+        else:
+            payload = []
+        
+        checksum = checksum & 0xff
+        rxchecksum = ord(self.read(1)[0])
+
+        self.rxExpect(self.protED)
+
+        if rxchecksum != checksum:
+            raise IOError("Checksum error: RX'd %x, expected %x"%(rxchecksum, checksum))
+        
+        return payload
+
+    def cmd_id(self):
+        self.sendPacket([self.CMD_ID])
+        payload = self.rxPacket()
+
+        cmdack = payload[0]
+
+        flags = payload[1:5]
+        flags = ord(flags[0]) + (ord(flags[1]) << 8) + (ord(flags[2]) << 16) + (ord(flags[3]) << 24)
+
+        bufsize = payload[5:7]
+        bufsize = ord(bufsize[0]) + (ord(bufsize[1]) << 8)
+
+        return flags, bufsize
+
+    def cmd_read(self, address, len):
+        
+        dleft = len
+        readbackdata = ""
+
+        while dleft > 0:
+            if dleft > 0x100:
+                dread = 0x100
+            else:
+                dread = dleft
+            
+            packet = [self.CMD_READ_BACK]
+            packet.extend(self.u32_to_buffer(address))
+            packet.extend(self.u16_to_buffer(dread))
+            self.sendPacket(packet)
+
+            response = self.rxPacket()
+
+            readbackdata += response[7:]
+            
+
+            dleft -= dread
+            address += dread
+        
+        return readbackdata
+
+
+        
+
+
