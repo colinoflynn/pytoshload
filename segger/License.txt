@@ -48,4 +48,4 @@ The Product is not fault-tolerant and is not designed, manufactured or intended 
 (g) The relationship between Licensor and Licensee is that of independent contractors and neither Licensee nor its agents shall have any authority to bind Licensor in any way.
 (h) If any SEGGER Microcontroller Systeme GmbH professional services are being provided, then such professional services are provided pursuant to the terms of a separate Professional Services Agreement between the parties. The parties acknowledge that such services are acquired independently of the Product licensed hereunder, and that provision of such services is not essential to the functionality of such Product.
 
-© 2002 SEGGER Microcontroller Systeme GmbH
+Copyright (C) 2002 SEGGER Microcontroller Systeme GmbH

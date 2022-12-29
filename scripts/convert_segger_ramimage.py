@@ -11,7 +11,7 @@ ramcodes = []
 #Read all hex files in directory
 for f in files:
     ihex = IntelHex.IntelHex(os.path.join('../segger/RamImage', f))
-    data = ihex.tobinarray()
+    data = list(ihex.tobinarray())
     size1 = ihex.maxaddr() - ihex.minaddr() + 1
     size2 = len(data)
 
