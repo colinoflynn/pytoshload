@@ -7,15 +7,17 @@ class LowLevelBootloader(object):
     may not work for others.
     """
 
-    def __init__(self, comobject, reset_function, password=[0xFF]*12):
+    def __init__(self, comobject, reset_function, password=[0xFF]*12, reset_and_connect=True):
         """Initialize bootloader connection. Requires you pass at minimum a serial object
         (comobject), along with a function that when called will reset the target & enter
         the bootloader."""
         self.ser = comobject
         self.reset = reset_function
         self.password = password
-        self.reset()
-        self.connect()
+
+        if reset_and_connect:
+            self.reset()
+            self.connect()
 
     def connect(self):
         """Send connection byte (0x86) to check if bootloader seems to be present"""
@@ -130,10 +132,13 @@ class LowLevelBootloader(object):
         if responsehex[1] != 0x31:
             raise IOError("ACK Response: Error (%x)"%responsehex[1])
 
-    def cmd_ram_transfer(self, data, starting_address):        
+    def cmd_ram_transfer(self, data, starting_address, skipcmd=False):        
         """Transfer RAM program. Requires correct password"""
 
-        self.cmd_checkack(0x10)
+        #If user already sent command byte, skip this
+        if skipcmd == False:
+            self.cmd_checkack(0x10)
+
         cs = self.calc_checksum(self.password)
         self.write(bytes(bytearray(self.password)))
         self.cmd_checkack(cs, 0, 0x10)
