@@ -2,6 +2,13 @@
 import serial
 import struct
 
+def lazyord(s):
+    if isinstance(s, int):
+        resb = s
+    else:
+        resb = ord(s)
+    return resb    
+
 class LowLevelBootloader(object):
     """TLCS900 low-level bootloader, based on at least the TLCS900L1 datasheets. May or
     may not work for others.
@@ -25,7 +32,7 @@ class LowLevelBootloader(object):
         self.write(b"\x86")
         res = self.read(1)
 
-        if ord(res[0]) != 0x86:
+        if lazyord(res[0]) != 0x86:
             raise IOError("Connect Fail - read: %s"%res)
 
     def calc_checksum(self, r):
@@ -59,7 +66,7 @@ class LowLevelBootloader(object):
             if len(response) != expectedlen:
                 raise IOError("Unexpected response length %d (data: %s)"%(len(response), str(response)))
 
-        responsehex = [ord(c) for c in response]
+        responsehex = [lazyord(c) for c in response]
         return response, responsehex
 
     def cmd_checkack(self, cmd, expected_extra_payload=0, expected_response=None):
@@ -84,6 +91,18 @@ class LowLevelBootloader(object):
             
         pn = response[4:16]
         print(pn)
+
+        if isinstance(response, str):
+            response = bytes([ord(c) for c in response])
+
+        pwaddr = struct.unpack("<I", response[16:20])
+        print("PW Comparison Address: 0x%x"%pwaddr)
+
+        ramaddr = struct.unpack("<I", bytes(response[20:24]))
+        print("RAM Start Address: 0x%x"%ramaddr)
+
+        ramendaddr = struct.unpack("<I", bytes(response[24:28]))
+        print("RAM End Address: 0x%x"%ramendaddr)
 
         protection = responsehex[40]
         if protection == 0:
@@ -238,8 +257,8 @@ class RamCodeProtocol(object):
     def rxExpect(self, expected):
         """Reads a single byte and compares it to an expected value"""
         c = self.read(1)
-        if ord(c[0]) != expected:
-            raise IOError("Sync Error - received %x (expected %x)"%(ord(c[0]), expected))
+        if lazyord(c[0]) != expected:
+            raise IOError("Sync Error - received %x (expected %x)"%(lazyord(c[0]), expected))
 
     def rxPacket(self):
         """Internal function, reads a packet and raises IOError if checksum is incorrect"""
@@ -247,8 +266,8 @@ class RamCodeProtocol(object):
         self.rxExpect(self.protSD2)
 
         l = self.read(2)
-        llsb = ord(l[0])
-        lmsb = ord(l[1])
+        llsb = lazyord(l[0])
+        lmsb = lazyord(l[1])
 
         checksum = llsb + lmsb
 
@@ -257,12 +276,12 @@ class RamCodeProtocol(object):
         if plen:
             payload = self.read(plen)
             for i in payload:
-                checksum += ord(i)
+                checksum += lazyord(i)
         else:
             payload = []
         
         checksum = checksum & 0xff
-        rxchecksum = ord(self.read(1)[0])
+        rxchecksum = lazyord(self.read(1)[0])
 
         self.rxExpect(self.protED)
 
@@ -279,10 +298,10 @@ class RamCodeProtocol(object):
         cmdack = payload[0]
 
         flags = payload[1:5]
-        flags = ord(flags[0]) + (ord(flags[1]) << 8) + (ord(flags[2]) << 16) + (ord(flags[3]) << 24)
+        flags = lazyord(flags[0]) + (lazyord(flags[1]) << 8) + (lazyord(flags[2]) << 16) + (lazyord(flags[3]) << 24)
 
         bufsize = payload[5:7]
-        bufsize = ord(bufsize[0]) + (ord(bufsize[1]) << 8)
+        bufsize = lazyord(bufsize[0]) + (lazyord(bufsize[1]) << 8)
 
         return flags, bufsize
 
@@ -336,7 +355,7 @@ class RamCodeProtocol(object):
             self.sendPacket(packet)
 
             response = self.rxPacket()
-            rc = ord(response[0])
+            rc = lazyord(response[0])
             if rc != self.CMD_ACK:
                 raise IOError("Response to program was %x (not ACK)"%rc)
             
