@@ -173,6 +173,21 @@ class LowLevelBootloader(object):
         self.write(bytes(bytearray(data)))        
         self.cmd_checkack(cs, 0, 0x10)
 
+    def cmd_get_crc(self):
+
+        response, responsehex = self.cmd_checkack(0x20, expected_extra_payload=3)
+        cs = self.calc_checksum(responsehex[0:2])
+
+        if cs != responsehex[2]:
+            raise IOError("Expected checksum mismatch: %x != %x"%(cs, responsehex[2]))
+        
+        crc = (responsehex[0] << 8) | responsehex[1]
+        return crc
+
+
+
+
+
 class RamCodeProtocol(object):
     """Segger RAM Code bootloader communication class for TLCS900.
 
